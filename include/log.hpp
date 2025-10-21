@@ -21,7 +21,7 @@
 #include <string_view>
 #include <source_location>
 
-// to network order
+// for network order
 #include <arpa/inet.h>
 
 // If you import this file you will get the namespace
