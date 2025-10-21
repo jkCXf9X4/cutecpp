@@ -2,16 +2,16 @@ find_package(Catch2 3 CONFIG REQUIRED)
 
 file(GLOB_RECURSE ALL_SRC CONFIGURE_DEPENDS "*.hpp" "*.cpp")
 
-add_executable(logger_tests
+add_executable(tests
     ${ALL_SRC}
 )
 
-target_link_libraries(logger_tests
-    PRIVATE
+target_link_libraries(tests
+    PUBLIC
         Catch2::Catch2WithMain
         cutecpp
 )
 
 include(CTest)
 include(Catch)
-catch_discover_tests(logger_tests)
+catch_discover_tests(tests)

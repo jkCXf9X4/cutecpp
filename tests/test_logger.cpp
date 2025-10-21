@@ -9,7 +9,7 @@
 #include <string>
 
 namespace fs = std::filesystem;
-using namespace ssp4cpp::utils::log;
+using namespace cutecpp;
 
 namespace
 {

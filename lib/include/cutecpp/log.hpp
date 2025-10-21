@@ -1,8 +1,8 @@
 
 #pragma once
 
-
 #include <log_level.hpp>
+
 #include <json.hpp>
 #include <socket.hpp>
 
