@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include <log_level.hpp>
-
-#include <json.hpp>
-#include <socket.hpp>
+#include <cutecpp/log_level.hpp>
+#include <cutecpp/json.hpp>
+#include <cutecpp/socket.hpp>
 
 
 #include <chrono>

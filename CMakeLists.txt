@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" projectVersion)
-project(cutecpp_prj VERSION ${projectVersion})
-message("Current cutecpp_prj version: ${projectVersion}\n")
+project(cutecpp VERSION ${projectVersion})
+message("Current cutecpp version: ${projectVersion}\n")
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(CUTECPP_BUILD_TESTS "Build cutecpp tests" ON)
 
 ## Link static
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")
@@ -36,9 +39,51 @@ message("CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}\n")
 message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
 
 # Subdirectories
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 add_subdirectory(lib)
 
-enable_testing()
-add_subdirectory(tests)
+if(CUTECPP_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
 
+install(
+  TARGETS cutecpp
+  EXPORT cutecppTargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/include/cutecpp
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+  EXPORT cutecppTargets
+  NAMESPACE cutecpp::
+  FILE cutecppTargets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cutecpp
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/cutecppConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cutecppConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cutecppConfig.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cutecpp
+)
+
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/cutecppConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/cutecppConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cutecpp
+)
