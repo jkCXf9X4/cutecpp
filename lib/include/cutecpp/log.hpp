@@ -3,8 +3,8 @@
 
 
 #include <log_level.hpp>
-#include <socket.hpp>
 #include <json.hpp>
+#include <socket.hpp>
 
 
 #include <chrono>
@@ -25,7 +25,7 @@
 #include <arpa/inet.h>
 
 // If you import this file you will get the namespace
-using namespace ssp4cpp::utils::log;
+using namespace cutecpp;
 
 // log_toggle.hpp
 #ifdef _LOG_
@@ -34,7 +34,7 @@ using namespace ssp4cpp::utils::log;
   #define IF_LOG(stmt) do { } while (0)
 #endif
 
-namespace ssp4cpp::utils::log
+namespace cutecpp
 {
 
     /**

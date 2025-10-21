@@ -1,11 +1,11 @@
 
-
-#include "utils/socket.hpp"
+#include <socket.hpp>
 #include <kissnet.hpp>
 
+#include <cstddef>
 
 
-namespace ssp4cpp::utils
+namespace cutecpp
 {
 
     static kissnet::tcp_socket* as_socket(void* ptr)
@@ -31,7 +31,7 @@ namespace ssp4cpp::utils
         return as_socket(socket)->connect() == kissnet::socket_status::valid;
     }
 
-    bool SocketWrapper::send(std::byte * payload, size_t size)
+    bool SocketWrapper::send(std::byte * payload, std::size_t size)
     {
         as_socket(socket)->send(payload, size);
         return true;

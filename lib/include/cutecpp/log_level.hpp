@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace ssp4cpp::utils::log
+namespace cutecpp
 {
 
     /**

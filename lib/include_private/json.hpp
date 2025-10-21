@@ -1,14 +1,12 @@
-
 #pragma once
 
 #include <string>
 #include <string_view>
 
-// If you import this file you will get the namespace
-
-namespace ssp4cpp::utils
+namespace cutecpp
 {
-    static std::string escape_json_string(std::string_view component)
+
+    inline std::string escape_json_string(std::string_view component)
     {
         std::string escaped;
         escaped.reserve(component.size());

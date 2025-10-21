@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" projectVersion)
-project(ssp4cpp_prj VERSION ${projectVersion})
-message("Current ssp4cpp_prj version: ${projectVersion}\n")
+project(cutecpp_prj VERSION ${projectVersion})
+message("Current cutecpp_prj version: ${projectVersion}\n")
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -12,18 +12,16 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++")
 
 
 # COMPILER
-
-# Optimize release builds
+## Optimize release builds
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG")
 
-# Debug builds keep symbols, no optimizations
+## Debug builds keep symbols, no optimizations
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g")
 set(CMAKE_C_FLAGS_DEBUG   "-O3 -g")
 
 
 # Status
-
 message("CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}\n")
 message("CMAKE_C_FLAGS_DEBUG: ${CMAKE_C_FLAGS_DEBUG}\n")
 
@@ -44,23 +42,3 @@ add_subdirectory(lib)
 enable_testing()
 add_subdirectory(tests)
 
-
-file(GLOB_RECURSE ALL_SRC CONFIGURE_DEPENDS "*.hpp" "*.cpp")
-
-# message(ALL_SRC ssp4cpp ="${ALL_SRC}")
-
-add_library(ssp4cpp STATIC ${ALL_SRC})
-
-target_include_directories(ssp4cpp
-  PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/include
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/include_private
-)
-target_compile_options(ssp4cpp PRIVATE -Wfatal-errors)
-
-find_package(pugixml CONFIG REQUIRED)
-target_link_libraries(ssp4cpp PRIVATE pugixml::static pugixml::pugixml)
-
-find_package(libzip CONFIG REQUIRED)
-target_link_libraries(ssp4cpp PRIVATE libzip::zip)
