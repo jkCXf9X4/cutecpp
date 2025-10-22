@@ -72,6 +72,7 @@ TEST_CASE("Logger appends multiple entries")
     Logger logger("test.logger", LogLevel::trace);
 
     Logger::enable_file_sink(log_path.string(), false);
+    Logger::enable_socket_sink("127.0.0.1:19996"); // Cutelog default
 
     logger(info)( "First {}", 1);
     logger(info)( "Second {}", 2);

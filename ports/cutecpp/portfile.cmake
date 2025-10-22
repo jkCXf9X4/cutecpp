@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jkCXf9X4/cutecpp
     REF "${VERSION}"
-    SHA512 2dbb4f48d233094ca4bbe2eb4a43667b18f18abe9bb2185c2345480c925bc464e2dbf147a4af273cfbd8be86bd1d5eecf8629633a0b67a1c1a5b3c55135fa041
+    #SHA512 0
     HEAD_REF main
 )
 
