@@ -2,6 +2,9 @@
 
 **cutecpp** is a lightweight C++23 logging library that bridges local applications with [Cutelog](https://github.com/busimus/cutelog?tab=readme-ov-file). It provides colorized console output, structured JSON payloads, and optional sinks for files or sockets so that you can forward telemetry to Cutelog dashboards without additional plumbing.
 
+Tested on Ubuntu 22.04
+Uses vcpkg for package management
+
 ## Project Layout
 - `include/` – Public headers (`log.hpp`, `log_level.hpp`) that define the logging API.
 - `src/` – Implementations that mirror the headers, including the Cutelog socket transport.

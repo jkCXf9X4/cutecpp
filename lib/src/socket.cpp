@@ -48,4 +48,9 @@ namespace cutecpp
         return true;
     }
 
+    std::uint32_t SocketWrapper::to_network_order(std::uint32_t i)
+    {
+        return htonl(i);
+    }
+
 }

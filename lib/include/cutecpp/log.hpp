@@ -20,9 +20,6 @@
 #include <string_view>
 #include <source_location>
 
-// for network order
-#include <arpa/inet.h>
-
 // If you import this file you will get the namespace
 using namespace cutecpp;
 
@@ -202,7 +199,7 @@ namespace cutecpp
         static std::vector<uint8_t> make_cutelog_payload(const std::string_view json)
         {
             uint32_t len = static_cast<uint32_t>(json.size());
-            uint32_t be = htonl(len); // convert to big-endian
+            uint32_t be = socket->to_network_order(len); // convert to big-endian
 
             std::vector<uint8_t> out(4 + json.size());
             std::memcpy(out.data(), &be, 4);

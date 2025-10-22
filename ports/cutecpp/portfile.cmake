@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jkCXf9X4/cutecpp
     REF "${VERSION}"
-    #SHA512 0
+    SHA512 6d9b4dca1b978dc95f955b43fe585e4377394da40d81b9d604f7df68a6066a94cf5c52243fa5636c816d09cfd1ade7696b40abe4eaff99a66c0fd41f6bdbba72
     HEAD_REF main
 )
 
@@ -25,5 +25,5 @@ file(REMOVE_RECURSE
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(
-    FILES "${SOURCE_PATH}/LICENSE"
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
 )
