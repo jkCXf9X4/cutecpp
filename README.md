@@ -28,11 +28,10 @@ Uses vcpkg for package management
 
 ## Quick Start
 ```cpp
-#include <log.hpp>
+#include <cutecpp/log.hpp>
 
 int main()
 {
-    using namespace ssp4cpp::utils::log;
 
     Logger logger{"example", info}; // sets level of terminal output
     Logger::enable_file_sink("example.log");
