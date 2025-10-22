@@ -153,7 +153,7 @@ namespace cutecpp
 
             if (level >= this->console_level)
             {
-                auto formatted_msg = std::format("[{}][{}] {}", loc.function_name(), log_level, message);
+                auto formatted_msg = std::format("[{}] {}", log_level, message);
                 Logger::write_to_console(level, formatted_msg);
             }
             if (level > LogLevel::ext_trace)
