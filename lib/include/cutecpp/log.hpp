@@ -229,7 +229,7 @@ namespace cutecpp
             entry << "\"time\":\"" << str_time << "\", ";
             entry << "\"name\":\"" << logger_name << "\", ";
             entry << "\"level\":\"" << level << "\", ";
-            entry << "\"msg\":\"" << std::format("[{}] {}", function, message) << "\", ";
+            entry << "\"msg\":\"" <<  message << "\", ";
             entry << "\"file\":\"" << file << "\", ";
             entry << "\"line\":\"" << line << "\", ";
             entry << "\"function\":\"" << function << "\"";
