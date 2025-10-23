@@ -36,6 +36,12 @@ namespace cutecpp
             case '\t':
                 escaped.append("\\t");
                 break;
+            case '{':
+                escaped.append("[");
+                break;
+            case '}':
+                escaped.append("]");
+                break;
             default:
                 if (static_cast<unsigned char>(c) < 0x20)
                 {

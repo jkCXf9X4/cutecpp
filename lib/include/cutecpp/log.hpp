@@ -159,7 +159,7 @@ namespace cutecpp
             if (level > LogLevel::ext_trace)
             {
                 auto json_str = build_json_entry(
-                    this->name, log_level, message, loc.file_name(), loc.line(), loc.function_name());
+                    this->name, log_level, escape_json_string(message), loc.file_name(), loc.line(), loc.function_name());
 
                 if (Logger::is_file_sink_enabled())
                     Logger::write_to_file(json_str);
