@@ -23,6 +23,7 @@ Uses vcpkg for package management
    ```
 3. Run the test suite with verbose failure output:
    ```sh
+   cmake -S . -B build -DCUTECPP_BUILD_TESTS=ON
    ctest --test-dir build --output-on-failure
    ```
 

@@ -2,32 +2,31 @@
 #pragma once
 
 #include <cutecpp/log_level.hpp>
-#include <cutecpp/json.hpp>
+
 #include <cutecpp/socket.hpp>
 
-
-#include <chrono>
-#include <ctime>
-#include <cstring>
-#include <format>
 #include <fstream>
-#include <iomanip>
-#include <iostream>
+#include <memory>
 #include <mutex>
-#include <sstream>
-#include <stdexcept>
 #include <string>
-#include <string_view>
 #include <source_location>
+#include <vector>
 
 // If you import this file you will get the namespace
 using namespace cutecpp;
 
 // log_toggle.hpp
 #ifdef _LOG_
-  #define IF_LOG(stmt) do { stmt } while (0)
+#define IF_LOG(stmt) \
+    do               \
+    {                \
+        stmt         \
+    } while (0)
 #else
-  #define IF_LOG(stmt) do { } while (0)
+#define IF_LOG(stmt) \
+    do               \
+    {                \
+    } while (0)
 #endif
 
 namespace cutecpp
@@ -45,8 +44,6 @@ namespace cutecpp
 
     class Logger
     {
-        // namespace warning = LogLevel::
-        // using LogLevel::debug as debug;
 
     public:
         static inline bool file_sink_enabled = false;
@@ -61,83 +58,25 @@ namespace cutecpp
         std::string name;
         LogLevel console_level;
 
-        Logger()
-        {
-            console_level = LogLevel::debug;
-            name = "null";
-        }
+        Logger();
 
-        Logger(std::string name_, LogLevel lvl)
-        {
-            console_level = lvl;
-            name = name_;
-        }
+        Logger(std::string name_, LogLevel lvl);
 
-        static void enable_file_sink(const std::string &path, bool append = true)
-        {
-            std::ios_base::openmode mode = std::ios::out;
-            mode |= append ? std::ios::app : std::ios::trunc;
+        static void enable_file_sink(const std::string &path, bool append = true);
 
-            if (Logger::file_sink_stream.is_open())
-            {
-                Logger::file_sink_stream.close();
-            }
+        static void disable_file_sink();
 
-            Logger::file_sink_stream.open(path, mode);
+        static bool is_file_sink_enabled();
 
-            if (!Logger::file_sink_stream.is_open())
-            {
-                Logger::file_sink_enabled = false;
-                Logger::file_sink_path.clear();
-                throw std::runtime_error("failed to open log file: " + path);
-            }
+        static void enable_socket_sink(const std::string &address);
 
-            Logger::file_sink_enabled = true;
-            Logger::file_sink_path = path;
-        }
-
-        static void disable_file_sink()
-        {
-            Logger::file_sink_enabled = false;
-            Logger::file_sink_path.clear();
-
-            if (Logger::file_sink_stream.is_open())
-            {
-                Logger::file_sink_stream.flush();
-                Logger::file_sink_stream.close();
-            }
-        }
-
-        static bool is_file_sink_enabled()
-        {
-            return Logger::file_sink_enabled && Logger::file_sink_stream.is_open();
-        }
-
-        static void enable_socket_sink(const std::string &address)
-        {
-            Logger::socket = std::make_unique<SocketWrapper>(address);
-            if (Logger::socket->connect())
-            {
-                auto payload = make_cutelog_payload("!!cutelog!!format=json");
-                Logger::socket->send((std::byte *)payload.data(), payload.size());
-                Logger::socket_sink_enabled = true;
-            }
-            else
-            {
-                std::cout << "Failed to set up socket connection" << std::endl;
-            }
-        }
-
-        static bool is_socket_sink_enabled()
-        {
-            return Logger::socket_sink_enabled && Logger::socket != nullptr && Logger::socket->is_valid();
-        }
+        static bool is_socket_sink_enabled();
 
         auto operator()(LogLevel level, std::source_location loc = std::source_location::current())
         {
             // This gives the option to return a function that does not do anything.
             // May enable some optimization, we will see
-            return [=,this]<class... Args>(std::format_string<Args...> fmt, Args &&...args)
+            return [=, this]<class... Args>(std::format_string<Args...> fmt, Args &&...args)
             {
                 auto message = std::format(fmt, std::forward<Args>(args)...);
                 // std::cout << message << std::endl;
@@ -146,97 +85,23 @@ namespace cutecpp
         }
 
         // Long log
-        void ll(LogLevel level, std::source_location loc, std::string_view message) const
-        {
-            std::unique_lock<std::mutex> lock(Logger::print_mutex);
-            auto log_level = log_level_to_str(level);
-
-            if (level >= this->console_level)
-            {
-                auto formatted_msg = std::format("[{}] {}", log_level, message);
-                Logger::write_to_console(level, formatted_msg);
-            }
-            if (level > LogLevel::ext_trace)
-            {
-                auto json_str = build_json_entry(
-                    this->name, log_level, escape_json_string(message), loc.file_name(), loc.line(), loc.function_name());
-
-                if (Logger::is_file_sink_enabled())
-                    Logger::write_to_file(json_str);
-                if (Logger::is_socket_sink_enabled())
-                    Logger::write_to_socket(json_str);
-            }
-        }
+        void ll(LogLevel level, std::source_location loc, std::string_view message) const;
 
     private:
-        static void write_to_console(LogLevel level, const std::string_view message)
-        {
-            const std::string_view color_prefix = log_level_to_color(level);
-            const std::string_view color_suffix = color_reset();
+        static void write_to_console(LogLevel level, const std::string_view message);
 
-            if (level < LogLevel::error)
-            {
-                std::cout << color_prefix << message << color_suffix << "\n";
-            }
-            else
-            {
-                std::cerr << color_prefix << message << color_suffix << "\n";
-            }
-        }
+        static void write_to_file(const std::string_view message);
 
-        static void write_to_file(const std::string_view message)
-        {
-            if (!Logger::file_sink_stream.is_open())
-            {
-                Logger::file_sink_enabled = false;
-                return;
-            }
+        static std::vector<uint8_t> make_cutelog_payload(const std::string_view json);
 
-            Logger::file_sink_stream << message;
-            Logger::file_sink_stream.flush();
-        }
-
-        static std::vector<uint8_t> make_cutelog_payload(const std::string_view json)
-        {
-            uint32_t len = static_cast<uint32_t>(json.size());
-            uint32_t be = socket->to_network_order(len); // convert to big-endian
-
-            std::vector<uint8_t> out(4 + json.size());
-            std::memcpy(out.data(), &be, 4);
-            std::memcpy(out.data() + 4, json.data(), json.size());
-            return out;
-        }
-
-        static void write_to_socket(const std::string_view message)
-        {
-            auto payload = make_cutelog_payload(message);
-            Logger::socket->send((std::byte *)payload.data(), payload.size());
-        }
+        static void write_to_socket(const std::string_view message);
 
         static std::string build_json_entry(const std::string_view logger_name,
                                             const std::string_view level,
                                             const std::string_view message,
                                             const std::string_view file,
                                             const uint32_t line,
-                                            const std::string_view function)
-        {
-
-            const auto time = std::chrono::system_clock::now();
-            const auto str_time = std::format("{}", time);
-
-            std::ostringstream entry;
-            entry << '{';
-            entry << "\"time\":\"" << str_time << "\", ";
-            entry << "\"name\":\"" << logger_name << "\", ";
-            entry << "\"level\":\"" << level << "\", ";
-            entry << "\"msg\":\"" <<  message << "\", ";
-            entry << "\"file\":\"" << file << "\", ";
-            entry << "\"line\":\"" << line << "\", ";
-            entry << "\"function\":\"" << function << "\"";
-            entry << "}\n";
-
-            return entry.str();
-        }
+                                            const std::string_view function);
     };
 
 }

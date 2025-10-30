@@ -7,7 +7,7 @@ message("Current cutecpp version: ${projectVersion}\n")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(CUTECPP_BUILD_TESTS "Build cutecpp tests" ON)
+option(CUTECPP_BUILD_TESTS "Build cutecpp tests" OFF)
 
 ## Link static
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")

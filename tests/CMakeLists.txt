@@ -2,11 +2,11 @@ find_package(Catch2 3 CONFIG REQUIRED)
 
 file(GLOB_RECURSE ALL_SRC CONFIGURE_DEPENDS "*.hpp" "*.cpp")
 
-add_executable(tests
+add_executable(cutecpp_tests
     ${ALL_SRC}
 )
 
-target_link_libraries(tests
+target_link_libraries(cutecpp_tests
     PUBLIC
         Catch2::Catch2WithMain
         cutecpp
@@ -14,4 +14,4 @@ target_link_libraries(tests
 
 include(CTest)
 include(Catch)
-catch_discover_tests(tests)
+catch_discover_tests(cutecpp_tests)
