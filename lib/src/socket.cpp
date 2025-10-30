@@ -1,5 +1,5 @@
 
-#include <cutecpp/socket.hpp>
+#include <socket.hpp>
 #include <kissnet.hpp>
 
 #include <cstddef>

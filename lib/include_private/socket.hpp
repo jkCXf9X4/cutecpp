@@ -12,7 +12,8 @@ namespace cutecpp
     public:
         static inline void *socket;
 
-        explicit SocketWrapper(const std::string &adress);
+        SocketWrapper(const std::string &adress);
+
         ~SocketWrapper();
 
         bool connect();
@@ -23,3 +24,4 @@ namespace cutecpp
     };
 
 }
+

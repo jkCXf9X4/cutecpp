@@ -3,8 +3,6 @@
 
 #include <cutecpp/log_level.hpp>
 
-#include <cutecpp/socket.hpp>
-
 #include <fstream>
 #include <memory>
 #include <mutex>
@@ -31,6 +29,7 @@ using namespace cutecpp;
 
 namespace cutecpp
 {
+    class SocketWrapper;
 
     /**
      * @brief Simple logger implementation used throughout the library.
@@ -51,7 +50,7 @@ namespace cutecpp
         static inline std::string file_sink_path;
 
         static inline bool socket_sink_enabled = false;
-        static inline std::unique_ptr<SocketWrapper> socket;
+        static inline SocketWrapper* socket = nullptr;
 
         static inline std::mutex print_mutex;
 

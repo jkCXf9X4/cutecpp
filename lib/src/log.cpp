@@ -1,5 +1,6 @@
 
 #include <cutecpp/log.hpp>
+#include "socket.hpp"
 
 #include <utils.hpp>
 
@@ -75,7 +76,7 @@ namespace cutecpp
 
     void Logger::enable_socket_sink(const std::string &address)
     {
-        Logger::socket = std::make_unique<SocketWrapper>(address);
+        Logger::socket = new SocketWrapper(address);
         if (Logger::socket->connect())
         {
             auto payload = make_cutelog_payload("!!cutelog!!format=json");
