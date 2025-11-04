@@ -6,9 +6,11 @@
 #include <fstream>
 #include <memory>
 #include <mutex>
-#include <string>
-#include <source_location>
 #include <vector>
+
+#include <string>
+#include <string_view>
+#include <source_location>
 
 // If you import this file you will get the namespace
 using namespace cutecpp;
@@ -44,19 +46,19 @@ namespace cutecpp
     class Logger
     {
 
-    public:
         static inline bool file_sink_enabled = false;
         static inline std::ofstream file_sink_stream;
         static inline std::string file_sink_path;
 
         static inline bool socket_sink_enabled = false;
-        static inline SocketWrapper* socket = nullptr;
+        static inline SocketWrapper *socket = nullptr;
 
         static inline std::mutex print_mutex;
 
         std::string name;
         LogLevel console_level;
 
+    public:
         Logger();
 
         Logger(std::string name_, LogLevel lvl);
@@ -71,17 +73,23 @@ namespace cutecpp
 
         static bool is_socket_sink_enabled();
 
-        auto operator()(LogLevel level, std::source_location loc = std::source_location::current())
+        struct LogCall
         {
-            // This gives the option to return a function that does not do anything.
-            // May enable some optimization, we will see
-            return [=, this]<class... Args>(std::format_string<Args...> fmt, Args &&...args)
+            Logger *self;
+            LogLevel level;
+            std::source_location loc;
+
+            void operator()(std::string_view fmt, auto &&...args) const
             {
-                auto message = std::format(fmt, std::forward<Args>(args)...);
-                // std::cout << message << std::endl;
-                this->ll(level, loc, message);
-            };
-        }
+                auto fa = std::make_format_args(args...);
+                l(fmt, fa);
+            }
+
+            void l(std::string_view fmt,
+                   std::format_args args) const;
+        };
+
+        LogCall operator()(LogLevel level, std::source_location loc = std::source_location::current());
 
         // Long log
         void ll(LogLevel level, std::source_location loc, std::string_view message) const;

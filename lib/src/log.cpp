@@ -94,6 +94,17 @@ namespace cutecpp
         return Logger::socket_sink_enabled && Logger::socket != nullptr && Logger::socket->is_valid();
     }
 
+    void Logger::LogCall::l(std::string_view fmt,
+                            std::format_args args) const
+    {
+        self->ll(level, loc, std::vformat(fmt, args));
+    }
+
+    Logger::LogCall Logger::operator()(LogLevel level, std::source_location loc)
+    {
+        return LogCall{this, level, loc};
+    }
+
     // Long log
     void Logger::ll(LogLevel level, std::source_location loc, std::string_view message) const
     {
