@@ -105,6 +105,12 @@ namespace cutecpp
         return LogCall{this, level, loc};
     }
 
+    std::string Logger::format_view(std::string_view fmt,
+                            std::format_args args)
+    {
+        return std::vformat(fmt, args);
+    }
+
     // Long log
     void Logger::ll(LogLevel level, std::source_location loc, std::string_view message) const
     {

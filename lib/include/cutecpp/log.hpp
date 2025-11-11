@@ -94,6 +94,16 @@ namespace cutecpp
         // Long log
         void ll(LogLevel level, std::source_location loc, std::string_view message) const;
 
+        // hides <format>
+        static std::string format(std::string_view fmt, auto &&...args)
+        {
+            auto fa = std::make_format_args(args...);
+            return format_view(fmt, fa);
+        }
+
+        static std::string format_view(std::string_view fmt,
+                                   std::format_args args);
+
     private:
         static void write_to_console(LogLevel level, const std::string_view message);
 
