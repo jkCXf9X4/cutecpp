@@ -6,6 +6,9 @@ message(ALL_SRC cutecpp ="${ALL_SRC}")
 add_library(cutecpp STATIC ${ALL_SRC})
 add_library(cutecpp::cutecpp ALIAS cutecpp)
 
+# Treat this static lib like a shared dependency.
+set_target_properties(cutecpp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_include_directories(cutecpp
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
