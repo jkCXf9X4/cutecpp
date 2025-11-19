@@ -2,29 +2,35 @@ cmake_minimum_required(VERSION 3.10)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" projectVersion)
 project(cutecpp VERSION ${projectVersion})
-message("Current cutecpp version: ${projectVersion}\n")
+message("cutecpp, version: ${projectVersion}\n")
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(CUTECPP_BUILD_TESTS "Build cutecpp tests" OFF)
 
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 ## Link static
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++")
+set(CMAKE_SHARED_LINKER_FLAGS " -static-libstdc++")
 
 
 # COMPILER
 ## Optimize release builds
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG" CACHE STRING "" FORCE)
+set(CMAKE_C_FLAGS_RELEASE "-flto=auto -O3 -g -march=native -fno-omit-frame-pointer -DNDEBUG" CACHE STRING "" FORCE)
 
-## Debug builds keep symbols, no optimizations
-set(CMAKE_CXX_FLAGS_DEBUG "-O1 -fno-lto -g")
-set(CMAKE_C_FLAGS_DEBUG   "-O1 -fno-lto -g")
+## Debug builds keep symbols, low optimizations
+set(CMAKE_CXX_FLAGS_DEBUG "-O1 -fno-lto -g" CACHE STRING "" FORCE)
+set(CMAKE_C_FLAGS_DEBUG   "-O1 -fno-lto -g" CACHE STRING "" FORCE)
 
 
 # Status
+message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}\n")
 message("CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}\n")
 message("CMAKE_C_FLAGS_DEBUG: ${CMAKE_C_FLAGS_DEBUG}\n")
 
