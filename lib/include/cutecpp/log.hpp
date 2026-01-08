@@ -11,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <source_location>
+#include <format>
 
 // If you import this file you will get the namespace
 using namespace cutecpp;
