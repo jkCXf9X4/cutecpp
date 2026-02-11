@@ -141,16 +141,19 @@ namespace cutecpp
 
     void Logger::write_to_console(LogLevel level, const std::string_view message)
     {
-        const std::string_view color_prefix = log_level_to_color(level);
-        const std::string_view color_suffix = color_reset();
+        // Color seems to be malfunctioning in some terminals, commented out for now
+        // const std::string_view color_prefix = log_level_to_color(level);
+        // const std::string_view color_suffix = color_reset();
 
         if (level < LogLevel::error)
         {
-            std::cout << color_prefix << message << color_suffix << "\n";
+            std::cout << message << "\n";
+            // std::cout << color_prefix << message << color_suffix << "\n";
         }
         else
         {
-            std::cerr << color_prefix << message << color_suffix << "\n";
+            std::cerr << message << "\n";
+            // std::cerr << color_prefix << message << color_suffix << "\n";
         }
     }
 
