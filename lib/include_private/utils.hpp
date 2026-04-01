@@ -4,9 +4,26 @@
 
 #include <string>
 #include <string_view>
+#include <filesystem>
 
 namespace cutecpp
 {
+
+        
+    void create_parent_folder(const std::string &path)
+    {
+        namespace fs = std::filesystem;
+
+        fs::path filePath = path;
+
+        // Get the parent directory of the file
+        fs::path dir = filePath.parent_path();
+
+        // Create directories if they don't exist
+        if (!dir.empty() && !fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+    }
 
     inline std::string escape_json_string(std::string_view component)
     {

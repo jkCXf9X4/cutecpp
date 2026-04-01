@@ -39,6 +39,8 @@ namespace cutecpp
         std::ios_base::openmode mode = std::ios::out;
         mode |= append ? std::ios::app : std::ios::trunc;
 
+        create_parent_folder(path);
+
         if (Logger::file_sink_stream.is_open())
         {
             Logger::file_sink_stream.close();
